@@ -24,22 +24,14 @@ const navLinks = [
 function Logo({ className }: { className?: string }) {
   return (
     <Link href="/" className={className} aria-label="HireLoop home">
-      <Image
-        src={logoUrl}
-        alt="HireLoop"
-        priority
-        className="h-8 w-auto"
-      />
+      <Image src={logoUrl} alt="HireLoop" priority className="h-8 w-auto" />
     </Link>
   )
 }
 
 function SignInLink({ className }: { className: string }) {
   return (
-    <Link
-      href="/signin"
-      className={className}
-    >
+    <Link href="/sign-in" className={className}>
       Sign In
     </Link>
   )
@@ -47,7 +39,9 @@ function SignInLink({ className }: { className: string }) {
 
 function GetStartedButton({ className }: { className: string }) {
   return (
-    <Button className={className}>Get Started</Button>
+    <Button render={<Link href="/sign-up" />} className={className}>
+      Get Started
+    </Button>
   )
 }
 
@@ -68,10 +62,7 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Separator
-            orientation="vertical"
-            className="mx-2 h-5 bg-white/20"
-          />
+          <Separator orientation="vertical" className="mx-2 h-5 bg-white/20" />
           <SignInLink className="px-2 text-sm font-medium text-indigo-400 hover:text-indigo-300" />
           <GetStartedButton className="h-8 bg-indigo-500 text-white hover:bg-indigo-400" />
         </div>

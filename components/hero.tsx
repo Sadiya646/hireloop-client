@@ -77,16 +77,20 @@ function SearchBar({ className }: { className?: string }) {
 export function Hero() {
   return (
     <section className="relative isolate flex min-h-svh flex-col overflow-hidden bg-neutral-950 text-white">
-      {/* Globe backdrop */}
+      {/* Globe backdrop — horizon sits at 45% from the top of the image,
+          so shift the image up by 45% of its height to pin the horizon
+          to the wrapper's top edge */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute inset-x-0 top-[46%] sm:top-[52%]">
+        <div className="absolute inset-x-0 top-[48%] sm:top-[54%]">
+          {/* Mask out the top of the image (magenta halo); horizon sits at 45%
+              from the top, so translate up 45% to pin it to the wrapper edge */}
           <Image
             src={globeUrl}
             alt=""
             width={1440}
             height={1882}
             priority
-            className="absolute top-0 left-1/2 w-[190%] max-w-none -translate-x-1/2 translate-y-[-55.4%] sm:w-[150%] lg:w-[145%]"
+            className="absolute top-0 left-1/2 w-[190%] max-w-none -translate-x-1/2 translate-y-[-45%] mask-[linear-gradient(to_bottom,transparent,transparent_26%,black_30%)] sm:w-[130%] lg:w-[120%]"
           />
         </div>
       </div>
