@@ -1,28 +1,62 @@
+
 "use client"
 
 import Link from "next/link"
-import type { FormEvent } from "react"
+import { useState, type FormEvent } from "react"
+import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
+import { authClient } from "@/lib/auth-client"
 
 const inputClasses =
   "h-9 w-full rounded-lg border border-border bg-background px-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
 
-// TODO: wire up real auth (better-auth). For now this only collects the form data.
 export default function SignInPage() {
-    
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const router = useRouter()
+
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
+    setLoading(true)
+    setError("")
 
-    const data = Object.fromEntries(new FormData(event.currentTarget))
-    console.log("Sign in:", data)
+    const formData = new FormData(event.currentTarget)
+
+    const email = formData.get("email") as string
+    const password = formData.get("password") as string
+
+    try {
+      const { error } = await authClient.signIn.email({
+        email,
+        password,
+        callbackURL: "/",
+      })
+
+      if (error) {
+        setError(error.message || "Invalid email or password")
+        return
+      }
+
+      router.push("/")
+      router.refresh()
+
+    } catch {
+      setError("Something went wrong. Please try again.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1.5 text-center">
-        <h1 className="text-xl font-semibold tracking-tight">Welcome back</h1>
+        <h1 className="text-xl font-semibold tracking-tight">
+          Welcome back
+        </h1>
+
         <p className="text-sm text-muted-foreground">
           Sign in to your HireLoop account
         </p>
@@ -33,6 +67,7 @@ export default function SignInPage() {
           <label htmlFor="email" className="text-sm font-medium">
             Email
           </label>
+
           <input
             id="email"
             name="email"
@@ -49,13 +84,15 @@ export default function SignInPage() {
             <label htmlFor="password" className="text-sm font-medium">
               Password
             </label>
+
             <Link
-              href="/sign-in"
+              href="/forgot-password"
               className="text-xs text-muted-foreground hover:text-foreground"
             >
               Forgot password?
             </Link>
           </div>
+
           <input
             id="password"
             name="password"
@@ -65,13 +102,20 @@ export default function SignInPage() {
             placeholder="••••••••"
             className={inputClasses}
           />
+
+          {error && (
+            <p className="text-sm text-red-500">
+              {error}
+            </p>
+          )}
         </div>
 
         <Button
           type="submit"
+          disabled={loading}
           className="mt-1 h-9 w-full bg-indigo-500 text-white hover:bg-indigo-400"
         >
-          Sign In
+          {loading ? "Signing in..." : "Sign In"}
         </Button>
       </form>
 
