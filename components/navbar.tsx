@@ -1,4 +1,3 @@
-
 "use client"
 
 import Image from "next/image"
@@ -21,12 +20,6 @@ import {
   userSession,
   signOut,
 } from "@/lib/auth-client"
-
-const navLinks = [
-  { href: "/jobs", label: "Browse Jobs" },
-  { href: "/company", label: "Company" },
-  { href: "/pricing", label: "Pricing" },
-]
 
 function Logo({ className }: { className?: string }) {
   return (
@@ -67,6 +60,18 @@ export function Navbar() {
 
   const isLoggedIn = !!session?.user
 
+  const userRole = (session?.user as { role?: string })?.role || "seeker"
+
+  const navLinks = [
+    { href: "/jobs", label: "Browse Jobs" },
+    { href: "/company", label: "Company" },
+    { href: "/pricing", label: "Pricing" },
+    {
+      href: isLoggedIn ? `/dashboard/${userRole}` : "/sign-in",
+      label: "Dashboard",
+    },
+  ]
+
   // Sign Out functionality
   const handleSignOut = async () => {
     const { error } = await signOut()
@@ -92,7 +97,7 @@ export function Navbar() {
 
           {navLinks.map((link) => (
             <Link
-              key={link.href}
+              key={link.label}
               href={link.href}
               className="rounded-lg px-3 py-1.5 text-sm text-neutral-300 transition-colors hover:text-white"
             >
@@ -170,7 +175,7 @@ export function Navbar() {
 
               {navLinks.map((link) => (
                 <SheetClose
-                  key={link.href}
+                  key={link.label}
                   render={
                     <Link
                       href={link.href}
