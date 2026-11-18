@@ -21,7 +21,7 @@ export default function DashboardLayout({
       <div className="flex min-h-svh w-full bg-[#111217] text-white">
         <DashboardSidebar />
         <SidebarInset className="flex flex-1 flex-col bg-[#111217]">
-          <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-white/[0.06] bg-[#111217]/80 px-4 backdrop-blur">
+          <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-white/6 bg-[#111217]/80 px-4 backdrop-blur">
             <SidebarTrigger className="text-neutral-400 hover:bg-white/10 hover:text-white" />
             <span className="text-sm font-medium text-neutral-300">
               Admin / Dashboard

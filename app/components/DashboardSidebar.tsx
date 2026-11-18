@@ -62,8 +62,8 @@ const menuItemsByRole: Record<Role, NavItem[]> = {
   ],
   recruiter: [
     { title: "Dashboard", url: "/dashboard/recruiter", icon: LayoutGridIcon },
-    { title: "Post a Job", url: "/dashboard/recruiter/post-job", icon: PlusCircleIcon },
-    { title: "Manage Jobs", url: "/dashboard/recruiter/manage-jobs", icon: BriefcaseBusinessIcon },
+    { title: "Post a Job", url: "/dashboard/recruiter/jobs/post-job", icon: PlusCircleIcon },
+    { title: "Manage Jobs", url: "/dashboard/recruiter/jobs", icon: BriefcaseBusinessIcon },
     { title: "Applicants", url: "/dashboard/recruiter/applicants", icon: UsersIcon },
     { title: "Settings", url: "/dashboard/recruiter/settings", icon: SettingsIcon },
   ],
