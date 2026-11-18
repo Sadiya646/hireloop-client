@@ -10,10 +10,10 @@ import {
   GlobeIcon,
   LayersIcon,
   MapPinIcon,
-  SparklesIcon,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { createJob } from "@/lib/actions/jobs"
 
 const fieldClasses =
   "h-11 w-full rounded-xl border border-white/10 bg-[#121318] px-3.5 pl-10 text-sm text-white outline-none transition-all placeholder:text-neutral-500 focus-visible:border-indigo-500 focus-visible:ring-3 focus-visible:ring-indigo-500/20"
@@ -31,26 +31,33 @@ export default function PostJobPage() {
   const [submittedData, setSubmittedData] = useState<JobData | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setIsSubmitting(true)
 
-    const formData = new FormData(event.currentTarget)
-    formData.set("type", selectedType)
-    formData.set("isRemote", String(isRemote))
+    try {
+      const formData = new FormData(event.currentTarget)
+      formData.set("type", selectedType)
+      formData.set("isRemote", String(isRemote))
 
-    const data = Object.fromEntries(formData) as JobData
+      // Backend API-te fetch/POST request pathano
+      const result = await createJob(formData)
+      console.log("Job created successfully on backend:", result)
 
-    setTimeout(() => {
-      console.log("Job data:", data)
+      // UI-te preview data set kora
+      const data = Object.fromEntries(formData) as JobData
       setSubmittedData(data)
+    } catch (error) {
+      console.error("Error posting job:", error)
+      alert("Failed to publish job. Please check your backend connection.")
+    } finally {
       setIsSubmitting(false)
-    }, 600)
+    }
   }
 
   return (
     <div className="mx-auto max-w-4xl space-y-8 pb-12 text-white">
-      {/* Top Header Banner matching screenshot */}
+      {/* Top Header Banner */}
       <div className="flex flex-col justify-between gap-4 border-b border-white/10 pb-6 sm:flex-row sm:items-center">
         <div>
           <div className="text-xs font-medium text-neutral-400">
@@ -64,15 +71,6 @@ export default function PostJobPage() {
             Fill in the position specifications to attract qualified talent across our network.
           </p>
         </div>
-
-        {/* <Button
-          type="submit"
-          form="job-post-form"
-          disabled={isSubmitting}
-          className="h-10 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-5 text-xs font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:opacity-90 disabled:opacity-50"
-        >
-          {isSubmitting ? "Publishing..." : "Publish Job →"}
-        </Button> */}
       </div>
 
       {/* Main Form */}
@@ -283,7 +281,7 @@ export default function PostJobPage() {
               rows={4}
               required
               placeholder="• 3+ years of experience with React, TypeScript...
-• Solid understanding of DOM performance..."
+- Solid understanding of DOM performance..."
               className="w-full rounded-xl border border-white/10 bg-[#121318] p-3.5 text-sm text-white outline-none transition-all placeholder:text-neutral-500 focus-visible:border-indigo-500 focus-visible:ring-3 focus-visible:ring-indigo-500/20 resize-y leading-relaxed"
             />
           </label>
@@ -306,11 +304,11 @@ export default function PostJobPage() {
           <div className="flex items-center gap-2 text-emerald-400">
             <CheckCircle2Icon className="size-5" />
             <h2 className="text-base font-semibold text-white">
-              Job Listing Successfully Published!
+              Job Listing Successfully Published & Sent to Backend!
             </h2>
           </div>
           <p className="text-xs text-neutral-400">
-            Here is the collected submission data payload ready for your database API:
+            Here is the submitted data payload that was sent via fetch:
           </p>
           <dl className="grid gap-x-6 gap-y-2 rounded-xl border border-white/10 bg-[#121318] p-4 sm:grid-cols-2 text-xs">
             {Object.entries(submittedData).map(([key, value]) => (
