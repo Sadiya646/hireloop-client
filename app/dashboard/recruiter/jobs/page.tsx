@@ -11,9 +11,20 @@ import {
   PlusIcon,
   Trash2Icon,
   UsersIcon,
+  AlertTriangleIcon,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { deleteJob, getJobs } from "@/lib/actions/jobs"
 
 type JobPost = {
@@ -38,13 +49,15 @@ export default function ManageJobsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  // State for Delete Confirmation Dialog
+  const [jobToDelete, setJobToDelete] = useState<string | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
+
   useEffect(() => {
     const fetchAllJobs = async () => {
       try {
         setIsLoading(true)
         const response = await getJobs()
-
-        // Backend response direct array hole response, r { data: [...] } format hole response.data nibe
         const jobList = Array.isArray(response) ? response : response?.data || []
         setJobs(jobList)
       } catch (err) {
@@ -58,19 +71,24 @@ export default function ManageJobsPage() {
     fetchAllJobs()
   }, [])
 
-  const handleDelete = async (jobId: string) => {
+  const confirmDelete = async () => {
+    if (!jobToDelete) return
+
     try {
-      await deleteJob(jobId)
+      setIsDeleting(true)
+      await deleteJob(jobToDelete)
       setJobs((prev) =>
-        prev.filter((job) => (job._id || job.id) !== jobId)
+        prev.filter((job) => (job._id || job.id) !== jobToDelete)
       )
+      setJobToDelete(null)
     } catch (err) {
       console.error("Failed to delete job:", err)
       alert("Failed to delete job from server.")
+    } finally {
+      setIsDeleting(false)
     }
   }
 
-  // Min & Max salary format korar helper
   const formatCompensation = (job: JobPost) => {
     if (job.minSalary && job.maxSalary) {
       return `${job.minSalary} - ${job.maxSalary}`
@@ -97,6 +115,7 @@ export default function ManageJobsPage() {
           </p>
         </div>
 
+        {/* New Job Post Button */}
         <Button
           render={<Link href="/dashboard/recruiter/post-job" />}
           className="h-10 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-5 text-xs font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:opacity-90"
@@ -260,7 +279,7 @@ export default function ManageJobsPage() {
                           </Button>
                           <button
                             type="button"
-                            onClick={() => handleDelete(jobId)}
+                            onClick={() => setJobToDelete(jobId)}
                             title="Delete Job"
                             className="grid size-8 place-items-center rounded-lg bg-white/5 text-neutral-400 ring-1 ring-white/10 transition-colors hover:bg-red-500/15 hover:text-red-400 hover:ring-red-500/30"
                           >
@@ -276,6 +295,42 @@ export default function ManageJobsPage() {
           </table>
         </div>
       </div>
+
+      {/* Modern Shadcn Alert Dialog for Deletion Confirmation */}
+      <AlertDialog
+        open={!!jobToDelete}
+        onOpenChange={(open: boolean) => !open && setJobToDelete(null)}
+      >
+        <AlertDialogContent className="border border-white/10 bg-[#16171d] text-white rounded-2xl shadow-2xl">
+          <AlertDialogHeader>
+            <div className="flex items-center gap-3">
+              <div className="grid size-10 place-items-center rounded-xl bg-red-500/10 text-red-400 ring-1 ring-red-500/20">
+                <AlertTriangleIcon className="size-5" />
+              </div>
+              <div>
+                <AlertDialogTitle className="text-lg font-semibold text-white">
+                  Delete Job Listing
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-xs text-neutral-400 mt-0.5">
+                  Are you sure you want to delete this job post? This action cannot be undone and will permanently remove the listing from our servers.
+                </AlertDialogDescription>
+              </div>
+            </div>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-4 gap-2">
+            <AlertDialogCancel className="h-10 rounded-xl border-white/10 bg-white/5 text-xs font-medium text-neutral-300 hover:bg-white/10 hover:text-white">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              disabled={isDeleting}
+              className="h-10 rounded-xl bg-red-600 px-5 text-xs font-semibold text-white hover:bg-red-500 transition-colors disabled:opacity-50"
+            >
+              {isDeleting ? "Deleting..." : "Yes, Delete Listing"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
