@@ -60,7 +60,7 @@ const menuItemsByRole: Record<Role, NavItem[]> = {
     { title: "Payments", url: "/dashboard/admin/payments", icon: CreditCardIcon },
     { title: "Settings", url: "/dashboard/admin/settings", icon: SettingsIcon },
   ],
-  recruiter: [
+  recruiter:[
     { title: "Dashboard", url: "/dashboard/recruiter", icon: LayoutGridIcon },
     { title: "Post a Job", url: "/dashboard/recruiter/jobs/post-job", icon: PlusCircleIcon },
     { title: "Manage Jobs", url: "/dashboard/recruiter/jobs", icon: BriefcaseBusinessIcon },
