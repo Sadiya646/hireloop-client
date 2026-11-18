@@ -25,7 +25,7 @@ export default function RootLayout({
     >
       <body className="bg-neutral-950">
         <ThemeProvider>
-          <Navbar />
+         
           {children}
         </ThemeProvider>
       </body>
