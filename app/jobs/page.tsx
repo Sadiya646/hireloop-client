@@ -4,6 +4,7 @@ import React, { Suspense, useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import {
+  ArrowLeftIcon,
   BanknoteIcon,
   BookmarkIcon,
   BriefcaseBusinessIcon,
@@ -37,7 +38,8 @@ interface JobPost {
 
 const JOB_TYPE_OPTIONS = ["Full-time", "Part-time", "Contract", "Freelance"]
 const JOBS_PER_PAGE = 6
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000"
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000"
 
 function extractMaxSalary(job: JobPost): number {
   if (job.salaryMax) return Number(job.salaryMax) || 0
@@ -99,7 +101,7 @@ function JobsPageContent() {
     }
   }, [])
 
-  // ব্যাকএন্ড থেকে রিয়েল জব ফেচ
+  // ব্যাকএন্ড থেকে রিয়েল জব ফেচ
   useEffect(() => {
     const fetchJobs = async () => {
       try {
@@ -147,7 +149,11 @@ function JobsPageContent() {
       const type = (job.type || job.jobType || "").toLowerCase()
 
       const matchesSearch =
-        !q || title.includes(q) || company.includes(q) || dept.includes(q) || location.includes(q)
+        !q ||
+        title.includes(q) ||
+        company.includes(q) ||
+        dept.includes(q) ||
+        location.includes(q)
 
       const matchesLocation = !loc || location.includes(loc)
 
@@ -184,7 +190,9 @@ function JobsPageContent() {
 
   const toggleJobType = (type: string) => {
     setSelectedTypes((prev) =>
-      prev.includes(type) ? prev.filter((item) => item !== type) : [...prev, type]
+      prev.includes(type)
+        ? prev.filter((item) => item !== type)
+        : [...prev, type]
     )
     setCurrentPage(1)
   }
@@ -208,6 +216,15 @@ function JobsPageContent() {
   return (
     <main className="min-h-screen bg-[#09090b] px-4 py-8 text-white sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
+        {/* Back to Home Button */}
+        <Link
+          href="/"
+          className="mb-4 inline-flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm font-medium text-neutral-400 transition hover:bg-white/5 hover:text-white"
+        >
+          <ArrowLeftIcon className="size-4" />
+          Back to Home
+        </Link>
+
         {/* Top Search Bar Card */}
         <form
           onSubmit={handleSearchSubmit}
@@ -286,7 +303,9 @@ function JobsPageContent() {
                         </span>
                         <span
                           className={
-                            checked ? "font-medium text-white" : "text-neutral-400"
+                            checked
+                              ? "font-medium text-white"
+                              : "text-neutral-400"
                           }
                         >
                           {type}
@@ -358,7 +377,8 @@ function JobsPageContent() {
               <div className="space-y-4">
                 {paginatedJobs.map((job) => {
                   const title = job.title || job.jobTitle || "Untitled Position"
-                  const company = job.company || job.companyName || "HireLoop Partner"
+                  const company =
+                    job.company || job.companyName || "HireLoop Partner"
                   const location = job.location || "Remote"
                   const type = job.type || job.jobType || "Full-time"
                   const isSaved = savedIds.includes(job._id)
