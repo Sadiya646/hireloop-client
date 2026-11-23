@@ -42,7 +42,9 @@ export const deleteJob = async (id: string) => {
   })
 
   if (!res.ok) {
-    throw new Error("Failed to delete job")
+   const errorText = await res.text()
+    console.error("Backend delete error response:", errorText)
+    throw new Error(`Failed to delete job: ${errorText}`)
   }
 
   return res.json()

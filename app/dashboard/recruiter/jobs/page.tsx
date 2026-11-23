@@ -115,8 +115,9 @@ export default function ManageJobsPage() {
           </p>
         </div>
 
-        {/* New Job Post Button */}
+        {/* New Job Post Button (nativeButton={false} added here) */}
         <Button
+          nativeButton={false}
           render={<Link href="/dashboard/recruiter/post-job" />}
           className="h-10 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-5 text-xs font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:opacity-90"
         >
@@ -267,7 +268,9 @@ export default function ManageJobsPage() {
                       {/* Actions */}
                       <td className="py-4 pr-6 pl-4 text-right">
                         <div className="flex items-center justify-end gap-2">
+                          {/* Update Button (nativeButton={false} added here) */}
                           <Button
+                            nativeButton={false}
                             render={
                               <Link
                                 href={`/dashboard/recruiter/edit-job/${jobId}`}
@@ -299,7 +302,7 @@ export default function ManageJobsPage() {
       {/* Modern Shadcn Alert Dialog for Deletion Confirmation */}
       <AlertDialog
         open={!!jobToDelete}
-        onOpenChange={(open: boolean) => !open && setJobToDelete(null)}
+        onOpenChange={(open) => !open && setJobToDelete(null)}
       >
         <AlertDialogContent className="border border-white/10 bg-[#16171d] text-white rounded-2xl shadow-2xl">
           <AlertDialogHeader>
