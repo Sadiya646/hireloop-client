@@ -1,5 +1,10 @@
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { DashboardSidebar } from "@/app/components/DashboardSidebar"
+import React from "react"
+import { DashboardSidebar } from "@/app/components/DashboardSidebar" // তোমার ফাইল পাথ অনুযায়ী ঠিক করে নিও
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
 
 export default function DashboardLayout({
   children,
@@ -7,27 +12,23 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <SidebarProvider
-      style={
-        {
-          "--sidebar": "#0b0b0e",
-          "--sidebar-foreground": "#ffffff",
-          "--sidebar-accent": "#1c1d24",
-          "--sidebar-accent-foreground": "#ffffff",
-          "--sidebar-border": "rgba(255,255,255,0.06)",
-        } as React.CSSProperties
-      }
-    >
-      <div className="flex min-h-svh w-full bg-[#111217] text-white">
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full bg-[#0f1014] text-white">
+        {/* বামপাশের সাইডবার */}
         <DashboardSidebar />
-        <SidebarInset className="flex flex-1 flex-col bg-[#111217]">
-          <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-white/6 bg-[#111217]/80 px-4 backdrop-blur">
-            <SidebarTrigger className="text-neutral-400 hover:bg-white/10 hover:text-white" />
+
+        {/* ডানপাশের মেইন কন্টেন্ট */}
+        <SidebarInset className="flex flex-1 flex-col bg-[#0f1014]">
+          {/* উপরের টপ বার (তোমার স্ক্রিনশটের মতো) */}
+          <header className="flex h-14 shrink-0 items-center gap-3 border-b border-white/10 bg-[#0b0b0e] px-4">
+            <SidebarTrigger className="text-neutral-300 hover:bg-white/10 hover:text-white" />
             <span className="text-sm font-medium text-neutral-300">
-              Admin / Dashboard
+              Dashboard
             </span>
           </header>
-          <main className="flex-1 p-4 sm:p-6">{children}</main>
+
+          {/* প্রতিটি পেজের (admin, recruiter, seeker) কন্টেন্ট এখানে লোড হবে */}
+          <main className="flex-1">{children}</main>
         </SidebarInset>
       </div>
     </SidebarProvider>
