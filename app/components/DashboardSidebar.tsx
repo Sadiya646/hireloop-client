@@ -71,6 +71,7 @@ const menuItemsByRole: Record<Role, NavItem[]> = {
     { title: "Dashboard", url: "/dashboard/seeker", icon: LayoutGridIcon },
     { title: "Browse Jobs", url: "/jobs", icon: BriefcaseBusinessIcon },
     { title: "Applications", url: "/dashboard/seeker/applications", icon: FileTextIcon },
+    { title: "Saved Jobs", url: "/dashboard/seeker/saved-jobs", icon: BriefcaseBusinessIcon },
     { title: "Settings", url: "/dashboard/seeker/settings", icon: SettingsIcon },
   ],
 }
